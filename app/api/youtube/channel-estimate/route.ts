@@ -5,8 +5,22 @@ import type { ChannelEstimateResponse, ChannelEstimateError } from "@/lib/youtub
 
 const cacheTtlMs = 1000 * 60 * 60 * 6;
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 function errorResponse(code: ChannelEstimateError["error"]["code"], message: string, status = 400) {
   return NextResponse.json<ChannelEstimateError>({ error: { code, message } }, { status });
+}
+
+export function GET() {
+  if (!process.env.YOUTUBE_API_KEY) {
+    return errorResponse("missing_api_key", "YouTube API key is not configured on the server.", 500);
+  }
+
+  return NextResponse.json({
+    ok: true,
+    message: "Use POST with JSON body { \"query\": \"youtube.com/@channel\" }."
+  });
 }
 
 export async function POST(request: Request) {
@@ -48,6 +62,9 @@ export async function POST(request: Request) {
     }
     if (message === "not_found") {
       return errorResponse("not_found", "We could not find a matching public YouTube channel.", 404);
+    }
+    if (message === "invalid_url") {
+      return errorResponse("invalid_url", "Please enter a valid YouTube channel URL, handle, or channel name.", 400);
     }
     if (message === "no_recent_videos") {
       return errorResponse("no_recent_videos", "This channel has no recent public videos with view data.", 422);

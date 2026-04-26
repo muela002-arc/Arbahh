@@ -106,6 +106,7 @@ async function youtubeGet<T>(path: string, params: Record<string, string | numbe
 async function resolveChannelId(query: string, apiKey: string) {
   const parsed = parseChannelQuery(query);
   if (!parsed.value) throw new Error("missing_query");
+  if (parsed.kind === "invalid") throw new Error("invalid_url");
 
   if (parsed.kind === "channelId") return parsed.value;
 

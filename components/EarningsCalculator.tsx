@@ -40,6 +40,7 @@ const nicheOptions: NicheOption[] = [
 ];
 
 const quickPickValues = [1000, 10000, 100000, 1000000];
+const termsStorageKey = "arbah_terms_accepted";
 
 const countryToRpmCountry: Record<Exclude<CountryCode, "">, CountrySlug> = {
   SA: "sa",
@@ -140,8 +141,13 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
   const [toast, setToast] = useState(false);
   const [resultLoading, setResultLoading] = useState(false);
   const [manualError, setManualError] = useState("");
+  const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
 
   useEffect(() => setUseArabicNumerals(isArabic), [isArabic]);
+
+  useEffect(() => {
+    setHasAcceptedTerms(window.localStorage.getItem(termsStorageKey) === "true");
+  }, []);
 
   useEffect(() => {
     if (!hasCalculated || lookupLoading) return;
@@ -191,7 +197,30 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
     setViewsMode("daily");
   }
 
+  function updateTermsAcceptance(accepted: boolean) {
+    setHasAcceptedTerms(accepted);
+    if (accepted) {
+      window.localStorage.setItem(termsStorageKey, "true");
+      setManualError("");
+      return;
+    }
+    window.localStorage.removeItem(termsStorageKey);
+    setHasCalculated(false);
+    setChannelEstimate(null);
+  }
+
+  function requireTermsAccepted() {
+    if (hasAcceptedTerms) return true;
+    setManualError(
+      isArabic
+        ? "يجب الموافقة على الشروط والتنبيه قبل استخدام الحاسبة."
+        : "You must accept the terms and disclaimer before using the calculator."
+    );
+    return false;
+  }
+
   function calculateManual() {
+    if (!requireTermsAccepted()) return;
     if (!Number.isFinite(dailyViews) || dailyViews <= 0) {
       setManualError(t.error);
       return;
@@ -204,6 +233,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
   }
 
   async function lookupOrCalculate() {
+    if (!requireTermsAccepted()) return;
     const query = channelQuery.trim();
     if (!query) {
       calculateManual();
@@ -265,10 +295,12 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
     : channelEstimate
       ? "border-[#2ECC71] bg-[#1F2A3A]"
       : "border-white/15 bg-[#1F2A3A]";
-  const automaticDisclaimer = isArabic
-    ? "هذه تقديرات فقط. الأرباح الفعلية تعتمد على بلد الجمهور، المجال، مدة المشاهدة، الطلب الإعلاني، حالة تفعيل الربح، الرعايات، وسياسات يوتيوب."
-    : "These are estimates only. Actual earnings depend on audience country, niche, watch time, ad demand, monetization status, sponsorships, and YouTube policies.";
-
+  const legalDisclaimer = isArabic
+    ? "هذه النتائج تقديرية فقط وتعتمد على بيانات عامة وافتراضات RPM. الأرباح الفعلية قد تختلف. الموقع غير تابع ليوتيوب أو Google."
+    : "These results are estimates only based on public data and RPM assumptions. Actual earnings may vary. This site is not affiliated with YouTube or Google.";
+  const termsText = isArabic
+    ? "أوافق على أن النتائج تقديرية فقط وليست نصيحة مالية، وأوافق على شروط الاستخدام."
+    : "I understand the results are estimates only, not financial advice, and I accept the Terms.";
   return (
     <section id="calculator" className="mx-auto w-full max-w-6xl px-4 sm:px-6" aria-label={isArabic ? "حاسبة أرباح يوتيوب" : "YouTube earnings calculator"}>
       <div
@@ -302,7 +334,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
                     id="channelLookup"
                     onChange={(event) => setChannelQuery(event.target.value)}
                     onKeyDown={(event) => {
-                      if (event.key === "Enter") lookupOrCalculate();
+                      if (event.key === "Enter" && hasAcceptedTerms) lookupOrCalculate();
                     }}
                     placeholder={isArabic ? "مثال: youtube.com/@MrBeast أو MrBeast" : "e.g. youtube.com/@MrBeast or MrBeast"}
                     type="text"
@@ -310,9 +342,34 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
                   />
                 </div>
               </div>
+              <div className="mt-3 rounded-xl border border-white/[0.12] bg-white/[0.04] p-3">
+                <label className="flex items-start gap-3 text-[13px] leading-6 text-slate-300">
+                  <input
+                    aria-describedby="calculatorLegalLinks"
+                    checked={hasAcceptedTerms}
+                    className="mt-1 shrink-0"
+                    onChange={(event) => updateTermsAcceptance(event.target.checked)}
+                    type="checkbox"
+                  />
+                  <span>{termsText}</span>
+                </label>
+                <p className="mt-2 text-[12px] leading-6 text-slate-400" id="calculatorLegalLinks">
+                  <a className="text-red-400 underline-offset-4 hover:underline" href="/terms">
+                    Terms
+                  </a>
+                  <span className="mx-2">·</span>
+                  <a className="text-red-400 underline-offset-4 hover:underline" href="/privacy">
+                    Privacy
+                  </a>
+                  <span className="mx-2">·</span>
+                  <a className="text-red-400 underline-offset-4 hover:underline" href="/disclaimer">
+                    Disclaimer
+                  </a>
+                </p>
+              </div>
               <button
                 className="mt-3 min-h-[56px] w-full rounded-xl bg-[linear-gradient(180deg,#FF4242_0%,#E62525_100%)] p-4 text-lg font-semibold text-white shadow-[0_12px_28px_rgba(255,59,59,0.32),inset_0_1px_0_rgba(255,255,255,0.18)] transition hover:-translate-y-px hover:shadow-[0_16px_36px_rgba(255,59,59,0.42),inset_0_1px_0_rgba(255,255,255,0.18)] disabled:cursor-not-allowed disabled:opacity-60"
-                disabled={lookupLoading}
+                disabled={lookupLoading || !hasAcceptedTerms}
                 onClick={lookupOrCalculate}
                 type="button"
               >
@@ -492,7 +549,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
                   {t.shareBtn}
                 </button>
 
-                <p className="mt-4 text-center text-[12px] leading-[1.7] text-slate-400">{automaticDisclaimer}</p>
+                <p className="mt-4 text-center text-[12px] leading-[1.7] text-slate-400">{legalDisclaimer}</p>
               </>
             )}
           </aside>
