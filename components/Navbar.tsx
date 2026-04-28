@@ -48,7 +48,7 @@ export default function Navbar() {
       <nav className="container-page flex min-h-16 items-center justify-between gap-4" aria-label={language === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
         <Link className="flex items-center gap-3 font-semibold text-slate-100" href="/">
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-red-600 text-white">ي</span>
-          <span>{language === "ar" ? "أرباح يوتيوب" : "Arbah YouTube"}</span>
+          <span>{language === "ar" ? "أرباح يوتيوب" : "Arbahh YouTube"}</span>
         </Link>
         <button
           aria-expanded={open}
