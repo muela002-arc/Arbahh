@@ -20,7 +20,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://arbahyoutube.com"),
+  metadataBase: new URL("https://arbahh.com"),
   title: {
     default: "أرباح يوتيوب | حاسبة أرباح يوتيوب عربية",
     template: "%s | أرباح يوتيوب"

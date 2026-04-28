@@ -8,6 +8,7 @@ const gaId = process.env.NEXT_PUBLIC_GA_ID;
 export default function Analytics() {
   const [enabled, setEnabled] = useState(false);
 
+  // GDPR: analytics only loads after explicit consent
   useEffect(() => {
     try {
       setEnabled(Boolean(gaId) && window.localStorage.getItem("arbah_cookie_consent") === "accepted");

@@ -7,17 +7,19 @@ import { useLanguage, type Language } from "./LanguageContext";
 const links = {
   ar: [
     { href: "/", label: "الرئيسية" },
-    { href: "/حاسبة", label: "الحاسبة" },
+    { href: "/youtube", label: "يوتيوب" },
+    { href: "/tiktok", label: "تيك توك" },
+    { href: "/instagram", label: "إنستغرام" },
     { href: "/مجالات", label: "المجالات" },
-    { href: "/دليل", label: "الدليل" },
-    { href: "/مقارنة", label: "مقارنة" }
+    { href: "/دليل", label: "الدليل" }
   ],
   en: [
     { href: "/", label: "Home" },
-    { href: "/حاسبة", label: "Calculator" },
+    { href: "/youtube", label: "YouTube" },
+    { href: "/tiktok", label: "TikTok" },
+    { href: "/instagram", label: "Instagram" },
     { href: "/مجالات", label: "Niches" },
-    { href: "/دليل", label: "Guide" },
-    { href: "/مقارنة", label: "Compare" }
+    { href: "/دليل", label: "Guide" }
   ]
 };
 

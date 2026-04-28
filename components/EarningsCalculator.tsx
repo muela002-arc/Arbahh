@@ -315,7 +315,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
         <div className="grid gap-6 lg:grid-cols-[55fr_45fr] lg:items-center">
           <div className={isArabic ? "text-right" : "text-left"}>
             <div className="rounded-2xl border border-[rgba(255,59,59,0.28)] bg-[linear-gradient(180deg,#1B2638_0%,#131B2A_100%)] p-4 shadow-[0_18px_45px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.04),0_0_32px_rgba(255,59,59,0.08)]">
-              <StepTitle>{isArabic ? "بحث تلقائي" : "Automatic lookup"}</StepTitle>
+              <StepTitle>{isArabic ? "الخطوة ١ (اختياري) — بحث عن قناة" : "Step 1 (Optional) — Channel lookup"}</StepTitle>
               <label className="mb-2 block text-[15px] font-semibold text-white/[0.88]" htmlFor="channelLookup">
                 {isArabic ? "أدخل رابط قناة يوتيوب أو اسم القناة أو @handle" : "Enter YouTube channel URL, @handle, or name"}
               </label>
@@ -504,6 +504,11 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
           </div>
 
           <aside className="rounded-2xl border border-white/[0.08] bg-[linear-gradient(180deg,#0E1728_0%,#080D18_100%)] p-4 shadow-[0_22px_55px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.03)] lg:sticky lg:top-24">
+            <div className="mb-4 rounded-xl border border-amber-600/30 bg-amber-500/10 px-4 py-3 text-[13px] leading-6 text-amber-200">
+              {isArabic
+                ? "هذه أرقام تقديرية فقط وليست نصيحة مالية أو ضماناً للدخل."
+                : "These are estimates only and not financial advice or guaranteed income."}
+            </div>
             {lookupLoading || resultLoading ? (
               <ResultsSkeleton />
             ) : lookupError || manualError ? (

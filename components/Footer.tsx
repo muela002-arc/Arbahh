@@ -1,13 +1,17 @@
 import Link from "next/link";
+import ObfuscatedEmail from "./ObfuscatedEmail";
 
 const links = [
-  ["حاسبة أرباح يوتيوب", "/حاسبة"],
+  ["حاسبة أرباح يوتيوب", "/youtube"],
+  ["حاسبة أرباح تيك توك", "/tiktok"],
+  ["حاسبة أرباح إنستغرام", "/instagram"],
   ["RPM يوتيوب عربي", "/مجالات"],
   ["كيف تربح من يوتيوب", "/دليل"],
   ["مقارنة المنصات", "/مقارنة"],
   ["شروط الخدمة", "/terms"],
   ["سياسة الخصوصية", "/privacy"],
-  ["إخلاء المسؤولية", "/disclaimer"]
+  ["إخلاء المسؤولية", "/disclaimer"],
+  ["الإبلاغ عن ثغرة", "/security"]
 ];
 
 export default function Footer() {
@@ -19,7 +23,13 @@ export default function Footer() {
           <p className="max-w-md text-[13px] leading-7 text-slate-500">
             أداة عربية مجانية لحساب الأرباح التقديرية لأي قناة يوتيوب. لا نطلب تسجيل دخول ولا نحفظ بيانات القنوات التي تدخلها.
           </p>
-          <p className="mt-3 text-[13px] leading-7 text-slate-600">للاستفسارات وطلبات الخصوصية: privacy@arbahyoutube.com</p>
+          <p className="mt-3 text-[13px] leading-7 text-slate-600">
+            للاستفسارات وطلبات الخصوصية: <ObfuscatedEmail user="privacy" domain="arbahh.com" className="text-slate-500 hover:text-slate-300" />
+          </p>
+          {/* OWNER IDENTITY — fill in before launch */}
+          <p className="mt-2 text-[12px] leading-6 text-slate-700">
+            arbahh.com · {/* TODO: اسم الشركة/المالك، بلد التسجيل */}
+          </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
           {links.map(([label, href]) => (

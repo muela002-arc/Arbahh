@@ -20,7 +20,7 @@ export default function EnglishPage() {
         <p className="font-bold text-red-600">Arabic creator tool</p>
         <h1 className="mt-2 text-4xl font-black">Arabic YouTube Earnings Calculator</h1>
         <p className="mt-5 text-lg leading-8 text-slate-600 dark:text-slate-300">
-          arbahyoutube.com is an Arabic-first YouTube money calculator for creators who want RPM assumptions tailored to
+          arbahh.com is an Arabic-first YouTube money calculator for creators who want RPM assumptions tailored to
           Arabic niches and MENA audience locations.
         </p>
         <Link className="focus-ring mt-8 inline-flex rounded-xl bg-red-600 px-6 py-4 font-black text-white hover:bg-red-700" href="/حاسبة">

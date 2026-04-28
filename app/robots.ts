@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/"
     },
-    sitemap: "https://arbahyoutube.com/sitemap.xml"
+    sitemap: "https://arbahh.com/sitemap.xml"
   };
 }

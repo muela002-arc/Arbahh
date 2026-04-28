@@ -20,11 +20,15 @@ const encodedRoutes = [
   "/ar/%D8%A7%D8%B1%D8%A8%D8%A7%D8%AD-%D8%A7%D9%84%D9%8A%D9%88%D8%AA%D9%8A%D9%88%D8%A8-%D9%81%D9%8A-%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8",
   "/terms",
   "/privacy",
-  "/disclaimer"
+  "/disclaimer",
+  "/youtube",
+  "/tiktok",
+  "/instagram",
+  "/security"
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://arbahyoutube.com";
+  const base = "https://arbahh.com";
   const nicheRoutes = niches.flatMap((niche) => [`/niches/${niche.slug}`, `/%D9%85%D8%AC%D8%A7%D9%84%D8%A7%D8%AA/${niche.slug}`]);
 
   return [...encodedRoutes, ...nicheRoutes].map((route) => ({
