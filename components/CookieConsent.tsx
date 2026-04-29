@@ -26,6 +26,7 @@ export default function CookieConsent() {
           onClick={() => {
             try {
               window.localStorage.setItem("arbah_cookie_consent", "accepted");
+              window.gtag?.("consent", "update", { analytics_storage: "granted" });
               window.location.reload();
             } catch {
               setVisible(false);

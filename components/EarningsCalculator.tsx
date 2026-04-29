@@ -234,6 +234,12 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
 
   async function lookupOrCalculate() {
     if (!requireTermsAccepted()) return;
+    if (typeof window !== "undefined" && typeof (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag === "function") {
+      (window as typeof window & { gtag: (...args: unknown[]) => void }).gtag("event", "calculate_click", {
+        event_category: "engagement",
+        event_label: "calculator"
+      });
+    }
     const query = channelQuery.trim();
     if (!query) {
       calculateManual();
