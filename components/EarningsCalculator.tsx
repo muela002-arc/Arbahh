@@ -334,7 +334,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
                     🔎
                   </span>
                   <input
-                    className={`min-h-[52px] rounded-xl border border-white/[0.18] bg-[#263449] px-4 text-[16px] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_18px_rgba(0,0,0,0.25)] placeholder:text-white/[0.65] focus:border-[#FF3B3B] focus:bg-[#2D3C54] focus:shadow-[0_0_0_3px_rgba(255,59,59,0.22),0_10px_24px_rgba(0,0,0,0.35)] ${
+                    className={`min-h-[52px] rounded-xl border border-white/[0.18] bg-white px-4 text-[16px] text-gray-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_18px_rgba(0,0,0,0.25)] placeholder:text-gray-400 focus:border-[#FF3B3B] focus:bg-white focus:shadow-[0_0_0_3px_rgba(255,59,59,0.22),0_10px_24px_rgba(0,0,0,0.35)] ${
                       isArabic ? "pr-11" : "pl-11"
                     } ${searchStateClass}`}
                     id="channelLookup"
