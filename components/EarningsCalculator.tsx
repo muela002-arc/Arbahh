@@ -143,6 +143,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
   const [manualError, setManualError] = useState("");
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
   const [format, setFormat] = useState<ContentFormat>("standard");
+  const [isMonetized, setIsMonetized] = useState(true);
 
   useEffect(() => setUseArabicNumerals(isArabic), [isArabic]);
 
@@ -293,7 +294,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
   const displayedViewsUnit = viewsMode === "daily" ? t.dailyViewsUnit : t.monthlyViewsUnit;
   const currentTip = isArabic ? tipsByNiche[niche] : englishTips[niche];
   const sliderBackground = `linear-gradient(to right, #DC2626 ${slider}%, #1E293B ${slider}%)`;
-  const hasVisibleResult = hasCalculated && !lookupError && !manualError;
+  const hasVisibleResult = hasCalculated && !lookupError && !manualError && isMonetized;
   const displayedDaily = hasVisibleResult ? nicheAdjusted.dailyEarningsRange : { low: 0, high: 0 };
   const displayedMonthly = hasVisibleResult ? nicheAdjusted.monthlyEarningsRange : { low: 0, high: 0 };
   const displayedYearly = hasVisibleResult ? nicheAdjusted.yearlyEarningsRange : { low: 0, high: 0 };
@@ -468,6 +469,31 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
               </div>
 
               <div>
+                <StepTitle>{isArabic ? "الخطوة ٢.٧ — حالة التحقيق من الدخل" : "Step 2.7 — Monetization status"}</StepTitle>
+                <button
+                  className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                    isMonetized
+                      ? "border-green-600/50 bg-green-600/10 text-green-400"
+                      : "border-slate-700 bg-slate-900 text-slate-400 hover:border-slate-600"
+                  }`}
+                  onClick={() => setIsMonetized((v) => !v)}
+                  type="button"
+                >
+                  <span>{isArabic ? "القناة مُفعَّل عليها تحقيق الدخل (YPP)" : "Channel is monetized (YPP)"}</span>
+                  <span className={`flex h-6 w-11 items-center rounded-full transition-colors ${isMonetized ? "bg-green-600" : "bg-slate-700"}`}>
+                    <span className={`h-4 w-4 rounded-full bg-white shadow transition-transform ${isMonetized ? "translate-x-6" : "translate-x-1"}`} />
+                  </span>
+                </button>
+                {!isMonetized && (
+                  <p className="mt-2 text-[12px] leading-5 text-slate-400">
+                    {isArabic
+                      ? "للانضمام إلى برنامج شركاء يوتيوب تحتاج ١٠٠٠ مشترك + ٤٠٠٠ ساعة مشاهدة (أو ١٠ مليون مشاهدة على شورتس) خلال ١٢ شهراً."
+                      : "To join YPP you need 1,000 subscribers + 4,000 watch hours (or 10M Shorts views) in the past 12 months."}
+                  </p>
+                )}
+              </div>
+
+              <div>
                 <StepTitle>{t.step3Label}</StepTitle>
                 <label className="mb-2 block text-[15px] font-semibold text-white/[0.88]">{t.nicheQuestion}</label>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(96px,1fr))] gap-2">
@@ -547,6 +573,8 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
               <ResultsSkeleton />
             ) : lookupError || manualError ? (
               <ErrorState message={lookupError || manualError} />
+            ) : !isMonetized ? (
+              <NotMonetizedState isArabic={isArabic} />
             ) : (
               <>
                 {channelEstimate ? <ChannelCard estimate={channelEstimate} isArabic={isArabic} useArabicNumerals={useArabicNumerals} /> : null}
@@ -650,6 +678,44 @@ function ResultsSkeleton() {
       <div className="h-28 rounded-2xl bg-slate-800" />
       <div className="h-20 rounded-2xl bg-slate-800" />
       <div className="h-24 rounded-xl bg-slate-800" />
+    </div>
+  );
+}
+
+function NotMonetizedState({ isArabic }: { isArabic: boolean }) {
+  const requirements = isArabic
+    ? [
+        { icon: "👥", label: "١٠٠٠ مشترك" },
+        { icon: "⏱️", label: "٤٠٠٠ ساعة مشاهدة خلال ١٢ شهراً" },
+        { icon: "⚡", label: "أو ١٠ مليون مشاهدة على شورتس" }
+      ]
+    : [
+        { icon: "👥", label: "1,000 subscribers" },
+        { icon: "⏱️", label: "4,000 watch hours in the past 12 months" },
+        { icon: "⚡", label: "Or 10M Shorts views in 12 months" }
+      ];
+
+  return (
+    <div className="rounded-2xl border border-amber-600/30 bg-amber-500/10 p-5">
+      <p className="text-sm font-semibold text-amber-400">
+        {isArabic ? "قناتك لم تنضم بعد إلى برنامج شركاء يوتيوب" : "Your channel isn't in the YouTube Partner Program yet"}
+      </p>
+      <p className="mt-2 text-[13px] leading-6 text-slate-300">
+        {isArabic ? "لبدء تحقيق الدخل تحتاج إلى:" : "To start earning from ads you need:"}
+      </p>
+      <ul className="mt-3 grid gap-2">
+        {requirements.map((req) => (
+          <li className="flex items-center gap-2 text-[13px] text-slate-200" key={req.label}>
+            <span aria-hidden="true">{req.icon}</span>
+            {req.label}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 text-[12px] leading-5 text-slate-400">
+        {isArabic
+          ? "بعد التأهل يمكنك تفعيل خيار 'القناة مُفعَّل عليها تحقيق الدخل' لرؤية تقديرات الأرباح."
+          : "Once eligible, toggle 'Channel is monetized' above to see earnings estimates."}
+      </p>
     </div>
   );
 }
