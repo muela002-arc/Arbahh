@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { buildEstimateModes } from "@/lib/earningsCalculator";
 import { formatNumber } from "@/lib/formatters";
 import { translations } from "@/lib/i18n";
-import { getRpmRange, tipsByNiche, type CountrySlug, type NicheSlug } from "@/lib/rpmData";
+import { getRpmRange, tipsByNiche, type ContentFormat, type CountrySlug, type NicheSlug } from "@/lib/rpmData";
 import type { ChannelEstimateError, ChannelEstimateResponse, EstimateMode } from "@/lib/youtubeTypes";
 import { useLanguage } from "./LanguageContext";
 import ToastNotification from "./ToastNotification";
@@ -142,6 +142,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
   const [resultLoading, setResultLoading] = useState(false);
   const [manualError, setManualError] = useState("");
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
+  const [format, setFormat] = useState<ContentFormat>("standard");
 
   useEffect(() => setUseArabicNumerals(isArabic), [isArabic]);
 
@@ -154,11 +155,11 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
     setResultLoading(true);
     const timer = window.setTimeout(() => setResultLoading(false), 180);
     return () => window.clearTimeout(timer);
-  }, [dailyViews, niche, country, viewsMode, hasCalculated, lookupLoading]);
+  }, [dailyViews, niche, country, format, viewsMode, hasCalculated, lookupLoading]);
 
   const rpmCountry = country ? countryToRpmCountry[country] : "other";
-  const rpm = useMemo(() => getRpmRange(niche, rpmCountry), [niche, rpmCountry]);
-  const estimateModes = useMemo(() => buildEstimateModes(dailyViews, niche, rpmCountry), [dailyViews, niche, rpmCountry]);
+  const rpm = useMemo(() => getRpmRange(niche, rpmCountry, undefined, format), [niche, rpmCountry, format]);
+  const estimateModes = useMemo(() => buildEstimateModes(dailyViews, niche, rpmCountry, format), [dailyViews, niche, rpmCountry, format]);
   const nicheAdjusted = estimateModes.find((mode) => mode.mode === "nicheAdjusted") ?? estimateModes[2];
 
   const result = useMemo(() => {
@@ -437,6 +438,33 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
                 <InfoBox title={t.confidence}>
                   {channelEstimate ? `${channelEstimate.confidence} · ${isArabic ? "حسب بيانات عامة" : "based on public data"}` : t.confidenceText}
                 </InfoBox>
+              </div>
+
+              <div>
+                <StepTitle>{isArabic ? "الخطوة ٢.٥ — نوع المحتوى" : "Step 2.5 — Content format"}</StepTitle>
+                <label className="mb-2 block text-[15px] font-semibold text-white/[0.88]">
+                  {isArabic ? "ما نوع الفيديوهات التي تنشرها؟" : "What type of videos do you post?"}
+                </label>
+                <div className="grid grid-cols-3 gap-2 rounded-xl border border-slate-800 bg-slate-950 p-1">
+                  {(
+                    [
+                      { value: "shorts", ar: "شورتس", en: "Shorts", icon: "⚡", hint: isArabic ? "دخل منخفض جداً" : "Very low RPM" },
+                      { value: "standard", ar: "عادي", en: "Standard", icon: "▶️", hint: isArabic ? "أقل من ٨ دقائق" : "Under 8 min" },
+                      { value: "longform", ar: "طويل", en: "Long-form", icon: "🎬", hint: isArabic ? "٨ دقائق أو أكثر" : "8 min or more" }
+                    ] as const
+                  ).map((opt) => (
+                    <button
+                      className={`flex flex-col items-center rounded-lg px-2 py-3 text-center transition ${format === opt.value ? "bg-red-600 text-white" : "text-slate-400 hover:text-slate-100"}`}
+                      key={opt.value}
+                      onClick={() => setFormat(opt.value)}
+                      type="button"
+                    >
+                      <span className="text-lg" aria-hidden="true">{opt.icon}</span>
+                      <span className="mt-1 block text-[13px] font-semibold">{isArabic ? opt.ar : opt.en}</span>
+                      <span className={`mt-0.5 block text-[10px] ${format === opt.value ? "text-red-200" : "text-slate-500"}`}>{opt.hint}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div>

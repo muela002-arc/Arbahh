@@ -90,6 +90,14 @@ export const tipsByNiche: Record<NicheSlug, string> = {
     "إذا كان المحتوى متنوعا، اختر زاوية واضحة لكل فيديو. وضوح الجمهور يساعد الخوارزمية على فهم القناة."
 };
 
+export type ContentFormat = "shorts" | "standard" | "longform";
+
+export const contentFormatMultipliers: Record<ContentFormat, number> = {
+  shorts: 0.08,   // Shorts are paid via Shorts revenue share, not standard AdSense RPM
+  standard: 1,
+  longform: 1.55  // 8+ min videos unlock mid-roll ads, meaningfully higher RPM
+};
+
 export const platformRpmMultipliers: Record<PlatformSlug, number> = {
   youtube: 1,
   tiktok: 0.18,
@@ -97,8 +105,9 @@ export const platformRpmMultipliers: Record<PlatformSlug, number> = {
   facebook: 0.45
 };
 
-export function getRpmRange(niche: NicheSlug, country: CountrySlug, override?: number): RpmRange {
-  const final = override && override > 0 ? override : nicheBaseRPM[niche] * countryMultipliers[country];
+export function getRpmRange(niche: NicheSlug, country: CountrySlug, override?: number, format: ContentFormat = "standard"): RpmRange {
+  const base = override && override > 0 ? override : nicheBaseRPM[niche] * countryMultipliers[country];
+  const final = base * contentFormatMultipliers[format];
   return {
     low: final * 0.6,
     final,

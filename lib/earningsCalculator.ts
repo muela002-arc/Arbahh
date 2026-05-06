@@ -1,8 +1,8 @@
-import { getRpmRange, type CountrySlug, type NicheSlug } from "./rpmData";
+import { getRpmRange, type ContentFormat, type CountrySlug, type NicheSlug } from "./rpmData";
 import type { EstimateMode } from "./youtubeTypes";
 
-export function estimateEarnings(views: number, niche: NicheSlug, country: CountrySlug = "other") {
-  const rpmRange = getRpmRange(niche, country);
+export function estimateEarnings(views: number, niche: NicheSlug, country: CountrySlug = "other", format: ContentFormat = "standard") {
+  const rpmRange = getRpmRange(niche, country, undefined, format);
   const low = (views / 1000) * rpmRange.low;
   const high = (views / 1000) * rpmRange.high;
 
@@ -12,10 +12,10 @@ export function estimateEarnings(views: number, niche: NicheSlug, country: Count
   };
 }
 
-export function estimatePeriodEarnings(dailyViews: number, niche: NicheSlug, country: CountrySlug = "other") {
-  const daily = estimateEarnings(dailyViews, niche, country);
-  const monthly = estimateEarnings(dailyViews * 30, niche, country);
-  const yearly = estimateEarnings(dailyViews * 365, niche, country);
+export function estimatePeriodEarnings(dailyViews: number, niche: NicheSlug, country: CountrySlug = "other", format: ContentFormat = "standard") {
+  const daily = estimateEarnings(dailyViews, niche, country, format);
+  const monthly = estimateEarnings(dailyViews * 30, niche, country, format);
+  const yearly = estimateEarnings(dailyViews * 365, niche, country, format);
 
   return {
     rpmRange: daily.rpmRange,
@@ -32,9 +32,9 @@ function rangeForViews(views: number, rpmLow: number, rpmHigh: number) {
   };
 }
 
-export function buildEstimateModes(dailyViews: number, niche: NicheSlug, country: CountrySlug = "other"): EstimateMode[] {
-  const arabicRpm = getRpmRange("general", country);
-  const nicheRpm = getRpmRange(niche, country);
+export function buildEstimateModes(dailyViews: number, niche: NicheSlug, country: CountrySlug = "other", format: ContentFormat = "standard"): EstimateMode[] {
+  const arabicRpm = getRpmRange("general", country, undefined, format);
+  const nicheRpm = getRpmRange(niche, country, undefined, format);
   const modes = [
     {
       mode: "broad" as const,
