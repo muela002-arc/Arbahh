@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Cairo, Inter } from "next/font/google";
+import dynamic from "next/dynamic";
 import Analytics from "@/components/Analytics";
-import CookieConsent from "@/components/CookieConsent";
 import Footer from "@/components/Footer";
 import { LanguageProvider } from "@/components/LanguageContext";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+
+const CookieConsent = dynamic(() => import("@/components/CookieConsent"), { ssr: false });
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -16,7 +18,8 @@ const cairo = Cairo({
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  display: "swap"
+  display: "swap",
+  preload: false
 });
 
 export const metadata: Metadata = {

@@ -1,8 +1,13 @@
 "use client";
 
-import EarningsCalculator from "@/components/EarningsCalculator";
+import dynamic from "next/dynamic";
 import { translations } from "@/lib/i18n";
 import { useLanguage } from "./LanguageContext";
+
+const EarningsCalculator = dynamic(() => import("@/components/EarningsCalculator"), {
+  ssr: false,
+  loading: () => <div className="h-[480px] animate-pulse rounded-2xl bg-slate-800" />
+});
 
 const tips = {
   ar: [

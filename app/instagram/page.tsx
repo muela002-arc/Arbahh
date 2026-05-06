@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import InstagramCalculator from "@/components/InstagramCalculator";
+import dynamic from "next/dynamic";
+
+const InstagramCalculator = dynamic(() => import("@/components/InstagramCalculator"), {
+  ssr: false,
+  loading: () => <div className="h-96 animate-pulse rounded-2xl bg-slate-800" />
+});
 
 export const metadata: Metadata = {
   title: "حاسبة أرباح إنستغرام 2026 — Brand Deals والريلز",

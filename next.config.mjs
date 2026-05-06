@@ -4,6 +4,12 @@ const nextConfig = {
   images: {
     formats: ["image/webp", "image/avif"]
   },
+  experimental: {
+    optimizePackageImports: ["@/components", "@/lib"]
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production"
+  },
   async rewrites() {
     return {
       beforeFiles: [

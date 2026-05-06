@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import TikTokCalculator from "@/components/TikTokCalculator";
+import dynamic from "next/dynamic";
+
+const TikTokCalculator = dynamic(() => import("@/components/TikTokCalculator"), {
+  ssr: false,
+  loading: () => <div className="h-96 animate-pulse rounded-2xl bg-slate-800" />
+});
 
 export const metadata: Metadata = {
   title: "حاسبة أرباح تيك توك 2026 — تقدير دخل صناع المحتوى العرب",
