@@ -49,6 +49,7 @@ export type ChannelEstimateResponse = {
   estimatedYearlyViews: number;
   detectedNiche: NicheSlug;
   confidence: "low" | "medium" | "high";
+  isArabicChannel: boolean;
   rpmRange: RpmRange;
   dailyEarningsRange: { low: number; high: number };
   monthlyEarningsRange: { low: number; high: number };

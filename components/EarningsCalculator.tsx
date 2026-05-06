@@ -161,7 +161,9 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
   const rpmCountry = country ? countryToRpmCountry[country] : "other";
   const rpm = useMemo(() => getRpmRange(niche, rpmCountry, undefined, format), [niche, rpmCountry, format]);
   const estimateModes = useMemo(() => buildEstimateModes(dailyViews, niche, rpmCountry, format), [dailyViews, niche, rpmCountry, format]);
-  const nicheAdjusted = estimateModes.find((mode) => mode.mode === "nicheAdjusted") ?? estimateModes[2];
+  const isNonArabicChannel = channelEstimate !== null && !channelEstimate.isArabicChannel;
+  const primaryMode = isNonArabicChannel ? "broad" : "nicheAdjusted";
+  const nicheAdjusted = estimateModes.find((mode) => mode.mode === primaryMode) ?? estimateModes[2];
 
   const result = useMemo(() => {
     const dailyLow = (dailyViews / 1000) * rpm.low;
@@ -579,6 +581,14 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
               <>
                 {channelEstimate ? <ChannelCard estimate={channelEstimate} isArabic={isArabic} useArabicNumerals={useArabicNumerals} /> : null}
 
+                {isNonArabicChannel && (
+                  <div className="mb-4 rounded-xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-[13px] leading-6 text-blue-200">
+                    {isArabic
+                      ? "يبدو أن هذه القناة غير عربية. أرقام RPM لدينا مُعايَرة للجمهور العربي، لذلك عرضنا التقدير الواسع ($0.25–$4.00) كأدق خيار متاح."
+                      : "This appears to be a non-Arabic channel. Our RPM data is calibrated for Arabic audiences, so we're showing the Broad estimate ($0.25–$4.00 RPM) as the most accurate available range."}
+                  </div>
+                )}
+
                 {!hasCalculated ? (
                   <p className="mb-4 rounded-xl border border-slate-800 bg-[#0F172A] p-4 text-center text-sm leading-7 text-slate-300">
                     {isArabic ? "أدخل قناة أو عدّل المشاهدات ثم اضغط احسب الأرباح لعرض التقدير." : "Enter a channel or edit views, then calculate earnings to see estimates."}
@@ -597,7 +607,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
 
                 <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                   {estimateModes.map((mode) => (
-                    <EstimateModeChip key={mode.mode} mode={mode} isArabic={isArabic} useArabicNumerals={useArabicNumerals} isActive={mode.mode === "nicheAdjusted"} />
+                    <EstimateModeChip key={mode.mode} mode={mode} isArabic={isArabic} useArabicNumerals={useArabicNumerals} isActive={mode.mode === primaryMode} />
                   ))}
                 </div>
 

@@ -18,6 +18,8 @@ type ChannelItem = {
     title?: string;
     description?: string;
     publishedAt?: string;
+    defaultLanguage?: string;
+    defaultAudioLanguage?: string;
     thumbnails?: { default?: { url?: string }; medium?: { url?: string }; high?: { url?: string } };
   };
   statistics?: {
@@ -55,6 +57,23 @@ type VideoItem = {
 };
 
 const youtubeBaseUrl = "https://www.googleapis.com/youtube/v3";
+
+const arabicRange = /[؀-ۿ]/;
+
+function detectArabicChannel(opts: {
+  defaultLanguage?: string;
+  defaultAudioLanguage?: string;
+  title: string;
+  description: string;
+  videoTitles: string[];
+}): boolean {
+  const lang = opts.defaultLanguage ?? opts.defaultAudioLanguage ?? "";
+  if (lang.startsWith("ar")) return true;
+  const combined = `${opts.title} ${opts.description} ${opts.videoTitles.slice(0, 5).join(" ")}`;
+  const arabicChars = (combined.match(/[؀-ۿ]/g) ?? []).length;
+  const totalChars = combined.replace(/\s/g, "").length;
+  return totalChars > 0 && arabicChars / totalChars > 0.15;
+}
 
 function toNumber(value: string | undefined): number | null {
   if (!value) return null;
@@ -199,12 +218,24 @@ export async function fetchChannelEstimate(query: string, apiKey: string): Promi
   if (recentVideos.length === 0) throw new Error("no_recent_videos");
 
   const medianRecentViewsPerDay = Math.round(median(recentVideos.map((video) => video.viewsPerDay)));
+  const channelTitle = channel.snippet?.title ?? "";
+  const channelDescription = channel.snippet?.description ?? "";
+  const videoTitles = videos.map((video) => video.snippet?.title ?? "");
+
   const { detectedNiche, confidence } = detectNiche({
-    channelTitle: channel.snippet?.title ?? "",
-    channelDescription: channel.snippet?.description ?? "",
+    channelTitle,
+    channelDescription,
     videoCategoryIds: videos.map((video) => video.snippet?.categoryId ?? "").filter(Boolean),
-    videoTitles: videos.map((video) => video.snippet?.title ?? ""),
+    videoTitles,
     videoDescriptions: videos.map((video) => video.snippet?.description ?? "")
+  });
+
+  const isArabicChannel = detectArabicChannel({
+    defaultLanguage: channel.snippet?.defaultLanguage,
+    defaultAudioLanguage: channel.snippet?.defaultAudioLanguage,
+    title: channelTitle,
+    description: channelDescription,
+    videoTitles
   });
 
   const totalViews = toNumber(channel.statistics?.viewCount);
@@ -217,7 +248,7 @@ export async function fetchChannelEstimate(query: string, apiKey: string): Promi
 
   return {
     channelId,
-    channelTitle: channel.snippet?.title ?? "YouTube channel",
+    channelTitle,
     channelAvatar: channel.snippet?.thumbnails?.high?.url ?? channel.snippet?.thumbnails?.medium?.url ?? channel.snippet?.thumbnails?.default?.url ?? "",
     subscriberCount: channel.statistics?.hiddenSubscriberCount ? null : toNumber(channel.statistics?.subscriberCount),
     totalViews,
@@ -233,6 +264,7 @@ export async function fetchChannelEstimate(query: string, apiKey: string): Promi
     estimatedYearlyViews: estimatedDailyViews * 365,
     detectedNiche,
     confidence,
+    isArabicChannel,
     ...earnings,
     estimateModes,
     lastUpdated: new Date().toISOString(),
