@@ -61,7 +61,7 @@ export default function Navbar() {
         </button>
         <div className="hidden items-center gap-2 md:flex">
           {currentLinks.map((link) => (
-            <Link className="focus-ring rounded-xl px-3 py-2 text-sm font-medium text-slate-300 hover:text-red-500" href={link.href} key={link.href}>
+            <Link className="focus-ring rounded-xl px-3 py-2 text-sm font-medium text-slate-300 underline-offset-4 hover:text-red-500 hover:underline" href={link.href} key={link.href}>
               {link.label}
             </Link>
           ))}
