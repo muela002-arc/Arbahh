@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import InstagramCalculator from "@/components/InstagramCalculator";
 
 export const metadata: Metadata = {
-  title: "حاسبة أرباح إنستغرام | arbahh.com",
+  title: "حاسبة أرباح إنستغرام 2026 — Brand Deals والريلز",
   description:
     "احسب أرباح إنستغرام التقديرية من الصفقات المدفوعة بناء على عدد المتابعين ومعدل التفاعل. أداة عربية مجانية.",
   alternates: { canonical: "/instagram" },
   openGraph: {
-    title: "حاسبة أرباح إنستغرام | arbahh.com",
+    title: "حاسبة أرباح إنستغرام 2026 — Brand Deals والريلز",
     description: "تقدير أرباح إنستغرام للمبدعين العرب من الصفقات المدفوعة.",
     images: ["/og.webp"]
   }

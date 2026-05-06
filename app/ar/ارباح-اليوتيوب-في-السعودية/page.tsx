@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import SeoArticlePage from "@/components/SeoArticlePage";
 
 export const metadata: Metadata = {
-  title: "ارباح اليوتيوب في السعودية",
-  description: "دليل تقديري لفهم ارباح اليوتيوب في السعودية حسب المشاهدات وRPM والمجال والجمهور.",
+  title: "أرباح يوتيوب في السعودية 2026 — كم يكسب اليوتيوبر؟",
+  description: "دليل تقديري لفهم أرباح يوتيوب في السعودية حسب المشاهدات وRPM والمجال والجمهور. محدث 2026.",
   alternates: { canonical: "/ar/ارباح-اليوتيوب-في-السعودية" }
 };
 

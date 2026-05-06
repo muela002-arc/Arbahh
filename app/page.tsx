@@ -3,9 +3,9 @@ import Link from "next/link";
 import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";
 
 export const metadata: Metadata = {
-  title: "حاسبة أرباح يوتيوب عربية مجانية",
+  title: "حاسبة أرباح يوتيوب العربية 2026 | RPM حسب الدولة والمجال",
   description:
-    "احسب أرباح يوتيوب وتيك توك وإنستغرام التقديرية. أداة عربية مجانية لصناع المحتوى تعرض نطاقات RPM حسب المجال والدولة.",
+    "احسب أرباح قناتك على يوتيوب بناء على المشاهدات والمجال والدولة. نطاقات RPM عربية محدثة لعام 2026.",
   alternates: {
     canonical: "/",
     languages: { ar: "/", en: "/en" }

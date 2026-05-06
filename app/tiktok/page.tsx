@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import TikTokCalculator from "@/components/TikTokCalculator";
 
 export const metadata: Metadata = {
-  title: "حاسبة أرباح تيك توك | arbahh.com",
+  title: "حاسبة أرباح تيك توك 2026 — تقدير دخل صناع المحتوى العرب",
   description:
     "احسب أرباح تيك توك التقديرية من صندوق المبدعين بناء على المشاهدات الشهرية والجمهور. أداة عربية مجانية.",
   alternates: { canonical: "/tiktok" },
   openGraph: {
-    title: "حاسبة أرباح تيك توك | arbahh.com",
+    title: "حاسبة أرباح تيك توك 2026 — تقدير دخل صناع المحتوى العرب",
     description: "تقدير أرباح تيك توك للمبدعين العرب.",
     images: ["/og.webp"]
   }
