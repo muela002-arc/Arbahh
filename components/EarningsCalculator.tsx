@@ -622,7 +622,24 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
                   <p className="mt-1 text-[13px] leading-[1.7] text-slate-300">{currentTip}</p>
                 </div>
 
-                <button className="mt-4 w-full rounded-lg border border-red-600 bg-transparent p-3 text-sm font-medium text-red-600 transition hover:bg-red-600/10" onClick={shareResult} type="button">
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  <a
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-700 bg-transparent px-3 py-3 text-sm font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+                    href={isArabic ? `/مجالات/${niche}` : `/niches/${niche}`}
+                  >
+                    <span aria-hidden="true">📊</span>
+                    {isArabic ? `RPM مجال ${nicheOptions.find((o) => o.slug === niche)?.ar ?? ""}` : `${nicheOptions.find((o) => o.slug === niche)?.en ?? ""} RPM data`}
+                  </a>
+                  <a
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-700 bg-transparent px-3 py-3 text-sm font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+                    href={isArabic ? "/دليل" : "/guide"}
+                  >
+                    <span aria-hidden="true">📖</span>
+                    {isArabic ? "دليل التحقيق من الدخل" : "Monetization guide"}
+                  </a>
+                </div>
+
+                <button className="mt-2 w-full rounded-lg border border-red-600 bg-transparent p-3 text-sm font-medium text-red-600 transition hover:bg-red-600/10" onClick={shareResult} type="button">
                   {t.shareBtn}
                 </button>
 
