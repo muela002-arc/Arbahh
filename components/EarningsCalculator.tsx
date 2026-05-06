@@ -597,7 +597,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
 
                 <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                   {estimateModes.map((mode) => (
-                    <EstimateModeChip key={mode.mode} mode={mode} isArabic={isArabic} useArabicNumerals={useArabicNumerals} />
+                    <EstimateModeChip key={mode.mode} mode={mode} isArabic={isArabic} useArabicNumerals={useArabicNumerals} isActive={mode.mode === "nicheAdjusted"} />
                   ))}
                 </div>
 
@@ -656,7 +656,7 @@ function SocialBladeResultCard({ label, range, strong = false }: { label: string
   );
 }
 
-function EstimateModeChip({ mode, isArabic, useArabicNumerals }: { mode: EstimateMode; isArabic: boolean; useArabicNumerals: boolean }) {
+function EstimateModeChip({ mode, isArabic, useArabicNumerals, isActive }: { mode: EstimateMode; isArabic: boolean; useArabicNumerals: boolean; isActive: boolean }) {
   const labels: Record<EstimateMode["mode"], string> = {
     broad: isArabic ? "واسع" : "Broad",
     arabicMarket: isArabic ? "السوق العربي" : "Arabic",
@@ -664,9 +664,14 @@ function EstimateModeChip({ mode, isArabic, useArabicNumerals }: { mode: Estimat
   };
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-[#0F172A] p-3 text-center">
-      <p className="text-xs font-semibold text-slate-300">{labels[mode.mode]}</p>
-      <p className="mt-1 text-[11px] text-slate-500">RPM {currencyRange(mode.rpmRange.low, mode.rpmRange.high, useArabicNumerals)}</p>
+    <div className={`rounded-xl border p-3 text-center transition ${isActive ? "border-red-600/50 bg-red-600/10" : "border-slate-800 bg-[#0F172A]"}`}>
+      <p className={`text-xs font-semibold ${isActive ? "text-red-400" : "text-slate-300"}`}>{labels[mode.mode]}</p>
+      <p className={`mt-1 text-sm font-bold leading-tight ${isActive ? "text-slate-100" : "text-slate-200"}`}>
+        {currencyRange(mode.monthlyEarningsRange.low, mode.monthlyEarningsRange.high, useArabicNumerals)}
+      </p>
+      <p className="mt-0.5 text-[10px] text-slate-500">
+        {isArabic ? "شهرياً · RPM" : "/ mo · RPM"} {currencyRange(mode.rpmRange.low, mode.rpmRange.high, useArabicNumerals)}
+      </p>
     </div>
   );
 }
