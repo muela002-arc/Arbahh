@@ -100,8 +100,8 @@ export const platformRpmMultipliers: Record<PlatformSlug, number> = {
 export function getRpmRange(niche: NicheSlug, country: CountrySlug, override?: number): RpmRange {
   const final = override && override > 0 ? override : nicheBaseRPM[niche] * countryMultipliers[country];
   return {
-    low: final * 0.5,
+    low: final * 0.6,
     final,
-    high: final
+    high: final * 1.4
   };
 }

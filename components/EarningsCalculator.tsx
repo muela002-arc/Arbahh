@@ -136,7 +136,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
   const [dailyViews, setDailyViews] = useState(10000);
   const [slider, setSlider] = useState(viewsToSlider(10000));
   const [niche, setNiche] = useState<NicheSlug>(defaultNiche);
-  const [country, setCountry] = useState<CountryCode>("");
+  const [country, setCountry] = useState<CountryCode>("MIX");
   const [useArabicNumerals, setUseArabicNumerals] = useState(isArabic);
   const [toast, setToast] = useState(false);
   const [resultLoading, setResultLoading] = useState(false);
@@ -472,7 +472,7 @@ export default function EarningsCalculator({ defaultNiche = "general" }: Earning
                   {t.countryQuestion}
                 </label>
                 <select id="country" onChange={(event) => setCountry(event.target.value as CountryCode)} value={country}>
-                  <option value="" disabled>
+                  <option value="" disabled hidden>
                     {t.countryPlaceholder}
                   </option>
                   <optgroup label={isArabic ? "الخليج" : "Gulf"}>
